@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños Ingeniero!</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a23;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff;
+            animation: pulse 2s infinite;
+        }
+
+        .binary {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+
+        .message {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            text-align: center;
+            background-color: rgba(0, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .cake-container {
+            position: relative;
+            height: 300px;
+            margin: 3rem 0;
+            perspective: 1000px;
+        }
+
+        .cpu {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            animation: float 5s infinite alternate ease-in-out;
+        }
+
+        .cpu-base {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(145deg, #2a2a4a, #1a1a30);
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translateZ(0);
+        }
+
+        .cpu-core {
+            position: absolute;
+            width: 160px;
+            height: 160px;
+            background: #0f0f1e;
+            border: 2px solid #444464;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 3px;
+            padding: 5px;
+            transform: translateZ(2px);
+        }
+
+        .cpu-cell {
+            background-color: #232342;
+            border-radius: 2px;
+        }
+
+        .cpu-cell.active {
+            background-color: #0ff;
+            animation: pulse 2s infinite;
+            box-shadow: 0 0 5px #0ff;
+        }
+
+        .cpu-pins-container {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            bottom: -15px;
+            transform: translateZ(-5px);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .cpu-pin {
+            width: 5px;
+            height: 12px;
+            background-color: #999;
+            border-radius: 1px;
+            margin: 2px;
+        }
+
+        .cpu-circuits {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            top: 45px;
+            left: 45px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .cpu-circuit {
+            position: absolute;
+            background-color: #0ff;
+            height: 2px;
+            opacity: 0.7;
+        }
+
+        .cpu-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 10px;
+            color: #0ff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #0ff;
+            transform: translateZ(3px);
+        }
+
+        .cpu-processor-info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 10px;
+            color: #0ff;
+            letter-spacing: 1px;
+            text-align: right;
+            text-shadow: 0 0 5px #0ff;
+            transform: translateZ(3px);
+        }
+
+        .cpu-led {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateZ(5px);
+            width: 12px;
+            height: 12px;
+            background-color: #ff5722;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff5722, 0 0 40px #ff9800;
+            animation: flicker 0.5s infinite alternate;
+            z-index: 11;
+        }
+
+        .cpu-led::after {
+            content: "";
+            position: absolute;
+            width: 30px;
+            height: 15px;
+            background: radial-gradient(circle, rgba(255, 87, 34, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -5px;
+            left: -9px;
+        }
+
+        @keyframes circuit-flow {
+            0% {
+                opacity: 0.1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.1;
+            }
+        }
+
+        .code-block {
+            background-color: #1e1e3f;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+        }
+
+        .code-block::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: #2d2b55;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .code-block pre {
+            margin-top: 20px;
+            color: #ffffff;
+            overflow-x: auto;
+        }
+
+        .keyword {
+            color: #ff9d00;
+        }
+
+        .string {
+            color: #a5ff90;
+        }
+
+        .comment {
+            color: #78a9ff;
+            font-style: italic;
+        }
+
+        .function {
+            color: #82aaff;
+        }
+
+        .number {
+            color: #ff628c;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #0ff;
+            color: #0a0a23;
+            font-weight: bold;
+            padding: 12px 30px;
+            margin-top: 2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .button:hover {
+            background-color: #00cccc;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 20px;
+            margin: 2rem 0;
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .floating-element {
+            position: absolute;
+            animation: float 5s infinite alternate ease-in-out;
+        }
+
+        .circuit-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+            animation: pulse 3s infinite;
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes flicker {
+            0% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateX(-50%) scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            .message {
+                font-size: 1.2rem;
+            }
+        }
+
+        .music-player {
+            max-width: 400px;
+            margin: 2rem auto;
+            background-color: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .music-player-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .music-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #0ff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transition: all 0.3s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .play-btn i {
+            font-size: 1.5rem;
+            color: #0a0a23;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 100px;
+            height: 5px;
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #0ff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #0ff;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.8);
+            border: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #0ff;
+            border-radius: 5px;
+            transition: width 0.1s linear;
+        }
+
+        .music-info {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        /* Iconos para los botones de control de música */
+        .play-icon, .pause-icon, .volume-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .play-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a0a23' d='M8 5v14l11-7z'/%3E%3C/svg%3E");
+        }
+
+        .pause-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a0a23' d='M6 19h4V5H6v14zm8-14v14h4V5h-4z'/%3E%3C/svg%3E");
+        }
+
+        .volume-icon {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230ff' d='M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z'/%3E%3C/svg%3E");
+        }
+
+        /* Estilos para el contador de tiempo */
+        .countdown-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background-color: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid #0ff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+            text-align: center;
+        }
+
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-value {
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0ff;
+            text-shadow: 0 0 10px #0ff;
+            background-color: rgba(10, 10, 35, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            min-width: 60px;
+            text-align: center;
+            position: relative;
+        }
+
+        .countdown-value::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, transparent 100%);
+            border-radius: 5px;
+            z-index: -1;
+        }
+
+        .countdown-value::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: rgba(0, 255, 255, 0.3);
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            color: #ffffff;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .countdown-separator {
+            font-size: 2rem;
+            color: #0ff;
+            align-self: center;
+            margin-top: -0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .date-input-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-input {
+            background-color: rgba(10, 10, 35, 0.8);
+            color: #fff;
+            border: 1px solid #0ff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            outline: none;
+        }
+
+        .date-input:focus {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .set-date-btn {
+            background-color: #0ff;
+            color: #0a0a23;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .set-date-btn:hover {
+            background-color: #00cccc;
+            transform: scale(1.05);
+        }
+
+        /* Líneas de código que parpadean en el fondo del contador */
+        .code-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .code-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            color: #0ff;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 35, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #0a0a23;
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #0ff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px #0ff;
+            color: #0ff;
+        }
+
+        .modal-message {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-signature {
+            font-size: 1.5rem;
+            color: #0ff;
+            margin-top: 1.5rem;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .modal-decoration {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #0ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        .modal-circuit {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+        }/* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(10, 10, 35, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #0a0a23;
+            border: 2px solid #0ff;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #0ff;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px #0ff;
+            color: #0ff;
+        }
+
+        .modal-message {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-signature {
+            font-size: 1.5rem;
+            color: #0ff;
+            margin-top: 1.5rem;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        .modal-decoration {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #0ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0ff;
+        }
+
+        .modal-circuit {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #0ff, transparent);
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+    <div class="container">
+        <h1>¡Feliz Cumpleaños Ingeniero Pipe!</h1>
+        <div class="binary">01000110 01100101 01101100 01101001 01111010 00100000 01000011 01110101 </div>
+
+        <!-- Reproductor de música -->
+        <div class="music-player">
+            <div class="music-player-title">Cumpleaños Feliz (8-bit Version)</div>
+            <div class="music-controls">
+                <button class="play-btn" id="playBtn">
+                    <span class="play-icon" id="playIcon"></span>
+                </button>
+                <div class="volume-control">
+                    <span class="volume-icon"></span>
+                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.7">
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="music-info" id="musicInfo">0:00 / 0:00</div>
+        </div>
+
+        <!-- Contador para el próximo cumpleaños -->
+        <div class="countdown-container">
+            <div class="countdown-title">Próxima actualización de sistema en:</div>
+            <div class="countdown-display">
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-days">000</div>
+                    <div class="countdown-label">Días</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-hours">00</div>
+                    <div class="countdown-label">Horas</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-minutes">00</div>
+                    <div class="countdown-label">Minutos</div>
+                </div>
+                <div class="countdown-separator">:</div>
+                <div class="countdown-item">
+                    <div class="countdown-value" id="countdown-seconds">00</div>
+                    <div class="countdown-label">Segundos</div>
+                </div>
+            </div>
+            <div class="date-input-container">
+                <input type="date" id="next-birthday" class="date-input">
+                <button class="set-date-btn" id="set-date-btn">Establecer fecha</button>
+            </div>
+            <div class="code-lines" id="code-lines">
+                <!-- Las líneas de código se generarán con JavaScript -->
+            </div>
+        </div>
+
+        <div class="message">
+            Hoy el sistema detectó un incremento significativo en tu contador de años.<br>
+            ¡Tu versión acaba de actualizarse exitosamente!<br>
+            Que este nuevo ciclo venga cargado con:<br>
+            - Menos bugs en tu vida<br>
+            - Mayor capacidad de memoria para momentos felices<br>
+            - APIs de alegría y prosperidad<br>
+            - Y mucho código limpio en tu camino
+        </div>
+
+        <!-- CPU en lugar del pastel -->
+        <div class="cake-container">
+            <div class="cpu">
+                <div class="cpu-base"></div>
+                <div class="cpu-core" id="cpu-core">
+                    <!-- Las celdas se generarán con JavaScript -->
+                </div>
+                <div class="cpu-pins-container" id="cpu-pins">
+                    <!-- Los pines se generarán con JavaScript -->
+                </div>
+                <div class="cpu-circuits" id="cpu-circuits">
+                    <!-- Los circuitos se generarán con JavaScript -->
+                </div>
+                <div class="cpu-label">HAPPY BIRTHDAY CPU</div>
+                <div class="cpu-processor-info">
+                    INGENIERO<br>
+                    SISTEMAS<br>
+                    v1.0.0
+                </div>
+                <div class="cpu-led"></div>
+            </div>
+        </div>
+
+        <div class="code-block">
+            <pre><span class="comment">// Algoritmo de felicitación optimizado</span>
+<span class="keyword">function</span> <span class="function">felicitarCumpleaños</span>() {
+    <span class="keyword">const</span> ingeniero = {
+        profesión: <span class="string">"Ingeniero de Sistemas"</span>,
+        Nombre: <span class="number">Andres Felipe Henriquez</span>,
+        inteligencia: <span class="number">Infinity</span>
+    };
+
+    <span class="keyword">while</span> (<span class="keyword">true</span>) {
+        <span class="function">console.log</span>(<span class="string">"¡Feliz Cumpleaños, brillante Ingeniero!"</span>);
+        <span class="function">celebrar</span>();
+        <span class="function">break</span>; <span class="comment">// Evitando un bucle infinito de felicidad</span>
+    }
+}
+
+<span class="function">felicitarCumpleaños</span>();</pre>
+        </div>
+
+        <div class="icon-grid">
+            <div>
+                <div class="tech-icon">💻</div>
+                <div>Código</div>
+            </div>
+            <div>
+                <div class="tech-icon">🔧</div>
+                <div>Soluciones</div>
+            </div>
+            <div>
+                <div class="tech-icon">🚀</div>
+                <div>Innovación</div>
+            </div>
+            <div>
+                <div class="tech-icon">🌐</div>
+                <div>Conexión</div>
+            </div>
+        </div>
+
+        <button class="button" id="celebrateBtn">INICIAR CELEBRACIÓN</button>
+    </div>
+
+    <!-- Modal de felicitación -->
+    <div class="modal" id="congratsModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">✕</button>
+            
+            <!-- Decoraciones del modal -->
+            <div class="modal-decoration" style="top: -10px; left: -10px;"></div>
+            <div class="modal-decoration" style="bottom: -10px; right: -10px;"></div>
+            <div class="modal-circuit" style="top: 0; left: 20%; width: 60%;"></div>
+            <div class="modal-circuit" style="bottom: 0; right: 20%; width: 60%;"></div>
+            
+            <h2 class="modal-title">¡TE DESEAN TUS COLEGAS!</h2>
+            
+            <div class="modal-message">
+                En este día especial, queremos celebrar tu talento, dedicación y profesionalismo.<br>
+                Que sigas escribiendo el código de tu éxito con líneas de felicidad y funciones de prosperidad.
+            </div>
+            
+            <div class="modal-signature">
+                Andrés Montaño & Arley Melo
+            </div>
+        </div>
+    </div>
+
+    <!-- Decoraciones flotantes -->
+    <div class="floating-element" style="top: 15%; left: 5%; font-size: 2rem;">⚙️</div>
+    <div class="floating-element" style="top: 25%; right: 8%; font-size: 1.5rem;">🖥️</div>
+    <div class="floating-element" style="bottom: 20%; left: 10%; font-size: 2.5rem;">🔌</div>
+    <div class="floating-element" style="bottom: 30%; right: 15%; font-size: 2rem;">💾</div>
+
+    <!-- Líneas de circuito -->
+    <div class="circuit-line" style="top: 10%; left: 0; width: 50%;"></div>
+    <div class="circuit-line" style="top: 30%; right: 0; width: 70%;"></div>
+    <div class="circuit-line" style="bottom: 15%; left: 20%; width: 60%;"></div>
+
+    <script>
+        // Confetti animation
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+        confettiCanvas.width = window.innerWidth;
+        confettiCanvas.height = window.innerHeight;
+
+        // Resize listener
+        window.addEventListener('resize', () => {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        });
+
+        // Confetti particles
+        let particles = [];
+        const colors = ['#0ff', '#ff0', '#f0f', '#0f0', '#ff5722', '#2196f3'];
+
+        // Create a particle
+        function createParticle() {
+            const size = Math.random() * 10 + 5;
+            return {
+                x: Math.random() * confettiCanvas.width,
+                y: -size,
+                size: size,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speed: Math.random() * 3 + 2,
+                angle: Math.random() * Math.PI * 2,
+                rotation: Math.random() * 360,
+                rotationSpeed: Math.random() * 5 - 2.5,
+                oscAmplitude: Math.random() * 5,
+                oscSpeed: 0.1 + Math.random() * 0.1
+            };
+        }
+
+        // Update confetti animation
+        function updateConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            // Generate new particles
+            if (particles.length < 100) {
+                particles.push(createParticle());
+            }
+
+            // Update and draw particles
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+
+                p.y += p.speed;
+                p.x += Math.sin(p.angle) * p.oscAmplitude;
+                p.angle += p.oscSpeed;
+                p.rotation += p.rotationSpeed;
+
+                // Draw particle
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+
+                // Remove particles that are off screen
+                if (p.y > confettiCanvas.height) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+
+            requestAnimationFrame(updateConfetti);
+        }
+
+        // Add decorative elements randomly
+        function addDecorations() {
+            const container = document.querySelector('.container');
+
+            for (let i = 0; i < 10; i++) {
+                const dec = document.createElement('div');
+                dec.className = 'decoration';
+                dec.style.left = Math.random() * 95 + '%';
+                dec.style.top = Math.random() * 95 + '%';
+                dec.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(dec);
+            }
+        }
+
+        // Unified initialization when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize music player
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const progressBar = document.getElementById('progressBar');
+            const musicInfo = document.getElementById('musicInfo');
+
+            // Create audio element with 8-bit happy birthday song
+            const audio = new Audio('https://ext.same-assets.com/1918685496/886095242.mpga');
+
+            // Set initial volume
+            audio.volume = volumeSlider.value;
+
+            // Format time function (convert seconds to mm:ss format)
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+
+            // Update progress bar and time display
+            audio.addEventListener('timeupdate', function() {
+                const duration = audio.duration || 0;
+                const currentTime = audio.currentTime || 0;
+                const progress = (currentTime / duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                musicInfo.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+            });
+
+            // Play/pause toggle
+            playBtn.addEventListener('click', function() {
+                if (audio.paused) {
+                    audio.play();
+                    playIcon.classList.remove('play-icon');
+                    playIcon.classList.add('pause-icon');
+                } else {
+                    audio.pause();
+                    playIcon.classList.remove('pause-icon');
+                    playIcon.classList.add('play-icon');
+                }
+            });
+
+            // Volume control
+            volumeSlider.addEventListener('input', function() {
+                audio.volume = volumeSlider.value;
+            });
+
+            // Loop the audio when it ends
+            audio.addEventListener('ended', function() {
+                audio.currentTime = 0;
+                audio.play();
+            });
+
+            // Initialize with play icon
+            playIcon.classList.add('play-icon');
+
+            // Initialize countdown for next birthday
+            const daysElement = document.getElementById('countdown-days');
+            const hoursElement = document.getElementById('countdown-hours');
+            const minutesElement = document.getElementById('countdown-minutes');
+            const secondsElement = document.getElementById('countdown-seconds');
+            const dateInput = document.getElementById('next-birthday');
+            const setDateBtn = document.getElementById('set-date-btn');
+            const codeLines = document.getElementById('code-lines');
+
+            // Set default date to next year
+            const today = new Date();
+            const nextYear = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+            const defaultDate = nextYear.toISOString().split('T')[0];
+            dateInput.value = defaultDate;
+
+            // Store target date in localStorage
+            let targetDate = localStorage.getItem('nextBirthdayDate') || defaultDate;
+            dateInput.value = targetDate;
+
+            // Generate code lines for the background
+            const codeSnippets = [
+                "function calcularTiempoRestante() {",
+                "  const ahora = new Date().getTime();",
+                "  const objetivo = new Date(targetDate).getTime();",
+                "  return objetivo - ahora;",
+                "}",
+                "while (tiempoRestante > 0) {",
+                "  mostrarContador(tiempoRestante);",
+                "  esperar(1000);",
+                "  tiempoRestante -= 1000;",
+                "}",
+                "iniciarCelebracion();",
+                "class ContadorCumpleaños {",
+                "  constructor(fecha) {",
+                "    this.targetDate = new Date(fecha);",
+                "    this.interval = null;",
+                "  }",
+                "  iniciar() { ... }",
+                "  detener() { ... }",
+                "  formatoNumero(num) { ... }",
+                "}"
+            ];
+
+            // Create code lines in the background
+            for (let i = 0; i < 8; i++) {
+                const line = document.createElement('div');
+                line.className = 'code-line';
+                line.style.top = `${i * 12}%`;
+                line.textContent = codeSnippets[i % codeSnippets.length];
+                codeLines.appendChild(line);
+            }
+
+            // Function to update the countdown
+            function updateCountdown() {
+                const currentDate = new Date();
+                const targetDateTime = new Date(targetDate);
+
+                // Calculate the difference in milliseconds
+                let diff = targetDateTime - currentDate;
+
+                // If the date has passed, set to next year
+                if (diff < 0) {
+                    targetDateTime.setFullYear(targetDateTime.getFullYear() + 1);
+                    diff = targetDateTime - currentDate;
+                }
+
+                // Convert to days, hours, minutes, and seconds
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                // Update DOM elements with calculated values
+                daysElement.textContent = days.toString().padStart(3, '0');
+                hoursElement.textContent = hours.toString().padStart(2, '0');
+                minutesElement.textContent = minutes.toString().padStart(2, '0');
+                secondsElement.textContent = seconds.toString().padStart(2, '0');
+            }
+
+            // Set a new target date
+            setDateBtn.addEventListener('click', function() {
+                if (dateInput.value) {
+                    targetDate = dateInput.value;
+                    localStorage.setItem('nextBirthdayDate', targetDate);
+                    updateCountdown(); // Update immediately
+                }
+            });
+
+            // Start the countdown and update every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+
+            // Generate CPU cells
+            const cpuCore = document.getElementById('cpu-core');
+            const totalCells = 64; // 8x8 grid
+
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'cpu-cell';
+
+                // Make some cells active randomly
+                if (Math.random() < 0.3) {
+                    cell.classList.add('active');
+
+                    // Add animation delay for them to blink at different times
+                    cell.style.animationDelay = `${Math.random() * 2}s`;
+                }
+
+                cpuCore.appendChild(cell);
+            }
+
+            // Generate CPU pins
+            const cpuPins = document.getElementById('cpu-pins');
+            const totalPins = 60;
+
+            for (let i = 0; i < totalPins; i++) {
+                const pin = document.createElement('div');
+                pin.className = 'cpu-pin';
+                cpuPins.appendChild(pin);
+            }
+
+            // Generate circuits
+            const cpuCircuits = document.getElementById('cpu-circuits');
+            const totalCircuits = 15;
+
+            for (let i = 0; i < totalCircuits; i++) {
+                const circuit = document.createElement('div');
+                circuit.className = 'cpu-circuit';
+
+                // Horizontal and vertical circuits
+                const isHorizontal = Math.random() > 0.5;
+
+                if (isHorizontal) {
+                    circuit.style.width = `${20 + Math.random() * 80}px`;
+                    circuit.style.height = '2px';
+                    circuit.style.top = `${Math.random() * 100}%`;
+                    circuit.style.left = `${Math.random() * 50}%`;
+                } else {
+                    circuit.style.height = `${20 + Math.random() * 80}px`;
+                    circuit.style.width = '2px';
+                    circuit.style.left = `${Math.random() * 100}%`;
+                    circuit.style.top = `${Math.random() * 50}%`;
+                }
+
+                // Animate circuits
+                circuit.style.animation = `circuit-flow ${1 + Math.random() * 3}s infinite`;
+                circuit.style.animationDelay = `${Math.random() * 2}s`;
+
+                cpuCircuits.appendChild(circuit);
+            }
+
+            // Randomly activate CPU cells over time
+            setInterval(() => {
+                const cells = document.querySelectorAll('.cpu-cell');
+                const randomCell = cells[Math.floor(Math.random() * cells.length)];
+
+                // Toggle active class
+                randomCell.classList.toggle('active');
+
+                // If we activate the cell, set a timeout to deactivate it
+                if (randomCell.classList.contains('active')) {
+                    setTimeout(() => {
+                        randomCell.classList.remove('active');
+                    }, 2000 + Math.random() * 3000);
+                }
+            }, 1000);
+
+            // Add decorations on load
+            addDecorations();
+        });
+
+        // Button for celebration
+        document.getElementById('celebrateBtn').addEventListener('click', function() {
+            // Start confetti
+            updateConfetti();
+
+            // Change button text
+            this.textContent = '¡CELEBRANDO!';
+            this.disabled = true;
+
+            // Play the birthday song automatically
+            const playBtn = document.getElementById('playBtn');
+            playBtn.click();
+
+            // Animate elements
+            document.querySelectorAll('.floating-element').forEach(el => {
+                el.style.animationDuration = Math.random() * 2 + 3 + 's';
+            });
+        });
+
+            // En el evento click del botón, reemplaza el código actual con:
+        document.getElementById('celebrateBtn').addEventListener('click', function() {
+            // Start confetti
+            updateConfetti();
+            
+            // Show modal
+            document.getElementById('congratsModal').style.display = 'flex';
+            
+            // Change button text
+            this.textContent = '¡CELEBRANDO!';
+            this.disabled = true;
+            
+            // Animate elements
+            document.querySelectorAll('.floating-element').forEach(el => {
+                el.style.animationDuration = Math.random() * 2 + 3 + 's';
+            });
+        });
+
+        // Add close modal functionality
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('congratsModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('congratsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
